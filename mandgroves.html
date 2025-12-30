@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Mangrove Map Generator</title>
+<style>
+body {
+    margin: 0;
+    background: #dde5d3;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+h1 {
+    margin: 12px;
+}
+canvas {
+    border: 3px solid #333;
+    background: #87cde5;
+    max-width: 95%;
+}
+.controls {
+    margin: 10px;
+}
+button {
+    padding: 10px 16px;
+    margin: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🌿 Mangrove Coastal Map Generator</h1>
+
+<canvas id="map" width="900" height="600"></canvas>
+<div class="controls">
+    <button onclick="generateMap()">Generate New Mangrove Map</button>
+    <button onclick="downloadMap()">Download PNG</button>
+    <button onclick="window.location.href='index.html'">⬅️ Back to Map Hub</button>
+</div>
+
+<script>
+const canvas = document.getElementById("map");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+
+function noise(x, y, seed) {
+    return Math.sin(x * 0.03 + y * 0.02 + seed) * 0.5 + 0.5;
+}
+
+function drawPixel(x, y, r, g, b) {
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(x, y, 1, 1);
+}
+
+function generateMap() {
+    ctx.clearRect(0, 0, W, H);
+    const seed = Math.random() * 1000;
+
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+
+            let nx = x / W - 0.5;
+            let ny = y / H - 0.5;
+            let distance = Math.sqrt(nx*nx + ny*ny);
+
+            // base elevation
+            let e = noise(x, y, seed) * 0.6 + noise(x*2, y*2, seed)*0.4;
+            e -= distance * 1.0;
+
+            let r, g, b;
+
+            if (e < 0.25) {
+                // shallow water
+                r = 50; g = 120; b = 200;
+            } else if (e < 0.35) {
+                // coastal flooded mangrove
+                r = 40; g = 100 + Math.random()*40; b = 180; 
+            } else if (e < 0.45) {
+                // mangrove trees
+                r = 30 + Math.random()*20; g = 90 + Math.random()*60; b = 40;
+            } else {
+                // land behind mangrove
+                r = 80 + Math.random()*20; g = 140 + Math.random()*30; b = 60;
+            }
+
+            drawPixel(x, y, r, g, b);
+        }
+    }
+}
+
+function downloadMap() {
+    const a = document.createElement("a");
+    a.download = "mangrove_map.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+}
+
+generateMap();
+</script>
+
+</body>
+</html>

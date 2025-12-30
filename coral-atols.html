@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coral Atolls Map Generator</title>
+<style>
+body {
+    margin: 0;
+    background: #b3e0ff;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+h1 {
+    margin: 12px;
+}
+canvas {
+    border: 3px solid #333;
+    max-width: 95%;
+}
+.controls {
+    margin: 10px;
+}
+button {
+    padding: 10px 16px;
+    margin: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🏝️ Coral Atolls Generator</h1>
+
+<canvas id="map" width="900" height="600"></canvas>
+<div class="controls">
+    <button onclick="generateMap()">Generate New Atolls</button>
+    <button onclick="downloadMap()">Download PNG</button>
+    <button onclick="window.location.href='index.html'">⬅️ Back to Map Hub</button>
+</div>
+
+<script>
+const canvas = document.getElementById("map");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+
+function drawCircle(x, y, radius, color) {
+    ctx.fillStyle = color;
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, Math.PI * 2);
+    ctx.fill();
+}
+
+function generateMap() {
+    ctx.clearRect(0, 0, W, H);
+
+    // fill background as deep sea
+    ctx.fillStyle = "#0066cc";
+    ctx.fillRect(0, 0, W, H);
+
+    const atollCount = 3 + Math.floor(Math.random() * 4); // 3-6 atolls
+    for (let i = 0; i < atollCount; i++) {
+        // random center
+        let cx = Math.random() * W * 0.8 + W*0.1;
+        let cy = Math.random() * H * 0.8 + H*0.1;
+        let lagoonRadius = 20 + Math.random() * 30;
+        let landWidth = 8 + Math.random() * 10;
+
+        // draw lagoon
+        drawCircle(cx, cy, lagoonRadius, "#66ccff"); // shallow water
+
+        // draw ring of land
+        for (let r = lagoonRadius; r < lagoonRadius + landWidth; r += 1) {
+            let alpha = 0.9 + Math.random() * 0.1; // irregularity
+            drawCircle(cx + (Math.random()-0.5)*2, cy + (Math.random()-0.5)*2, r, `rgba(210,180,140,${alpha})`); // sandy land
+        }
+    }
+}
+
+function downloadMap() {
+    const a = document.createElement("a");
+    a.download = "coral_atolls_map.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+}
+
+generateMap();
+</script>
+
+</body>
+</html>

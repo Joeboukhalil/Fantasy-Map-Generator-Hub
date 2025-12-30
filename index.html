@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Fantasy Map Hub</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Georgia', serif;
+    background: #f3e9d2;
+    color: #333;
+    text-align: center;
+}
+
+h1 {
+    margin: 30px 0 10px 0;
+    font-size: 40px;
+    color: #4b3f2f;
+}
+
+h2 {
+    margin-bottom: 30px;
+    color: #6b5e4c;
+}
+
+.map-grid {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 30px;
+    padding: 20px;
+}
+
+.map-card {
+    width: 220px;
+    height: 140px;
+    border: 3px solid #4b3f2f;
+    border-radius: 12px;
+    overflow: hidden;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    box-shadow: 3px 3px 8px rgba(0,0,0,0.2);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.map-card:hover {
+    transform: scale(1.05);
+    box-shadow: 5px 5px 15px rgba(0,0,0,0.3);
+}
+
+.map-label {
+    background: rgba(75, 63, 47, 0.7);
+    color: #fff;
+    padding: 6px;
+    font-weight: bold;
+    position: absolute;
+    width: 100%;
+    bottom: 0;
+    text-align: center;
+}
+
+.container {
+    position: relative;
+}
+</style>
+</head>
+<body>
+
+<h1>🗺️ Fantasy Map Hub</h1>
+<h2>Choose a biome to explore its map</h2>
+
+<div class="map-grid">
+
+    <div class="container" onclick="openMap('forest.html')">
+        <div class="map-card" style="background-image: url('forest_preview.png');"></div>
+        <div class="map-label">Forest</div>
+    </div>
+
+    <div class="container" onclick="openMap('coastal.html')">
+        <div class="map-card" style="background-image: url('coastal_preview.png');"></div>
+        <div class="map-label">Coastal Cliffs</div>
+    </div>
+
+    <div class="container" onclick="openMap('coral-atols.html')">
+        <div class="map-card" style="background-image: url('coral_preview.png');"></div>
+        <div class="map-label">Coral Atolls</div>
+    </div>
+
+    <div class="container" onclick="openMap('floadplain.html')">
+        <div class="map-card" style="background-image: url('floodplain_preview.png');"></div>
+        <div class="map-label">Floodplains</div>
+    </div>
+
+    <div class="container" onclick="openMap('mandgroves.html')">
+        <div class="map-card" style="background-image: url('mangrove_preview.png');"></div>
+        <div class="map-label">Mangroves</div>
+    </div>
+
+</div>
+
+<script>
+function openMap(page) {
+    window.open(page, "_blank");
+}
+</script>
+
+</body>
+</html>

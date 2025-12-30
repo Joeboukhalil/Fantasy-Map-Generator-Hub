@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Coastal Cliffs Map Generator</title>
+<style>
+body {
+    margin: 0;
+    background: #a2d4f2;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+h1 {
+    margin: 12px;
+}
+canvas {
+    border: 3px solid #333;
+    max-width: 95%;
+}
+.controls {
+    margin: 10px;
+}
+button {
+    padding: 10px 16px;
+    margin: 5px;
+    font-size: 15px;
+    cursor: pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>🪨 Coastal Cliffs Map Generator</h1>
+
+<canvas id="map" width="900" height="600"></canvas>
+<div class="controls">
+    <button onclick="generateMap()">Generate New Cliffs</button>
+    <button onclick="downloadMap()">Download PNG</button>
+    <button onclick="window.location.href='index.html'">⬅️ Back to Map Hub</button>
+</div>
+
+<script>
+const canvas = document.getElementById("map");
+const ctx = canvas.getContext("2d");
+const W = canvas.width;
+const H = canvas.height;
+
+// simple noise function
+function noise(x, y, seed) {
+    return Math.sin(x*0.02 + y*0.03 + seed) * 0.5 + 0.5;
+}
+
+function drawPixel(x, y, r, g, b) {
+    ctx.fillStyle = `rgb(${r},${g},${b})`;
+    ctx.fillRect(x, y, 1, 1);
+}
+
+function generateMap() {
+    ctx.clearRect(0, 0, W, H);
+    const seed = Math.random() * 1000;
+
+    for (let y = 0; y < H; y++) {
+        for (let x = 0; x < W; x++) {
+
+            let nx = x/W - 0.5;
+            let ny = y/H - 0.5;
+            let distance = Math.sqrt(nx*nx + ny*ny);
+
+            // base elevation
+            let e = noise(x, y, seed)*0.6 + noise(x*2, y*2, seed)*0.4;
+            e -= distance * 1.0;
+
+            let r, g, b;
+
+            // cliff logic: steeper rise near sea edge
+            if (e < 0.3) {
+                // deep sea
+                r = 30; g = 90; b = 160;
+            } else if (e < 0.38) {
+                // cliff rocks
+                r = 120; g = 80; b = 60;
+            } else if (e < 0.55) {
+                // coastal land
+                r = 60; g = 140; b = 70;
+            } else {
+                // inland hills
+                r = 90; g = 160; b = 80;
+            }
+
+            drawPixel(x, y, r, g, b);
+        }
+    }
+}
+
+function downloadMap() {
+    const a = document.createElement("a");
+    a.download = "coastal_cliffs_map.png";
+    a.href = canvas.toDataURL("image/png");
+    a.click();
+}
+
+generateMap();
+</script>
+
+</body>
+</html>
